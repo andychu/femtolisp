@@ -1,0 +1,19 @@
+#summary Library and extended functionality reference
+
+= Strings =
+
+|| done? || *signature* || *description* ||
+|| Y     || `(string a b ...)` || append/construct ||
+|| Y     || `(string.inc str index [nchars])` || increment a byte index by n characters (default 1) ||
+|| Y     || `(string.dec str index [nchars])` ||  ||
+||       || `(string.count str i j)` || # of chars between 2 byte offsets ||
+||       || `(string.width str)` || # columns when printed ||
+|| Y     || `(string.char str i)` || char at byte offset ||
+|| Y     || `(string.sub str i j)` || substring between 2 bytes offsets ||
+|| Y     || `(string.split str sep-str)` || split string on characters in sep-str string ||
+||       || `(string.trim s at-start at-end)` || remove given chars from beginning and end of string ||
+|| Y     || `(string.reverse s)` || ||
+||       || `(string.find s str|char)` || ||
+||       || `(string.map f str)` || ||
+|| Y     || `(string.encode wchar-array)` || convert to UTF8 ||
+|| Y     || `(string.decode str)` || convert to UCS ||
