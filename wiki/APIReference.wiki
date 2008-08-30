@@ -1,8 +1,20 @@
 #summary Library and extended functionality reference
 
+= Value constructors =
+|| *signature* || *description* ||
+|| `(cons a b)` || ||
+|| `(list ...)` || ||
+|| `(vector ...)` || ||
+|| `(vector.alloc size [init])` || make a vector of the given size, optionally initializing every element to the given value ||
+|| `(array ctype ...)` || make primitive (unboxed) array ||
+|| `(c-value ctype [init])` || make c-value of the given type, optionally initialize ||
+
+The following cvalue constructors are also available: `int8, uint8, int16, uint16, int32, uint32, int64, uint64, char, wchar, long, ulong, float, double`
+
 = Environment =
 || done? || *signature* || *description* ||
 ||Y|| `(intern str)` || intern a string (creates a symbol) ||
+||Y|| `(gensym)` || create a unique symbol ||
 ||Y|| `(set-syntax sym function)` || set the macro expander function for the given head symbol ||
 ||Y|| `(symbol-syntax sym)` || get the expander for a symbol, or nil if none ||
 ||Y|| `(syntax-environment)` || get the syntax environment as an assoc list ||
