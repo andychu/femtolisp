@@ -1,5 +1,30 @@
 #summary Library and extended functionality reference
 
+= Builtin special forms =
+|| *signature* || *description* ||
+|| `(quote val)` || ||
+|| `(cond (cond1 do1 do2 ...) (cond2 do1 do2 ...) ...)` || ||
+|| `(if cond then else)` || ||
+|| `(and ...)` || ||
+|| `(or ...)` || ||
+|| `(while cond body)` || ||
+|| `(lambda args body)` || `args` is a list or dotted list. `body` must be a single expression ||
+|| `(progn ...)` || ||
+|| `(trycatch body func)` || if an exception occurs evaluating `body`, `func` is invoked with the exception as its argument ||
+
+= Standard builtin functions =
+`eq, atom, not, symbolp, numberp, boundp, consp, builtinp, vectorp, fixnump, equal, cons, car, cdr, rplaca, rplacd, eval, apply, set, prog1, +, -, *, /, <, aref, aset, length, assoc`
+
+= Nonstandard builtin functions =
+|| *signature* || *description* ||
+|| `(raise val)` || raise an exception (any value) ||
+|| `(compare a b)` || perform an ordered comparison of any two values. returns -1, 0, or 1, for a<b, a==b, and a>b, respectively ||
+|| `~` || bitwise not ||
+|| `&` || bitwise and ||
+|| `!` || bitwise or ||
+|| `$` || bitwise xor ||
+|| `(for lo hi (lambda (n) body))` || fast bounded iteration. the supplied function is invoked successively for n from lo to hi, inclusive. ||
+
 = Value constructors =
 || *signature* || *description* ||
 || `(cons a b)` || ||
