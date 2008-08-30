@@ -74,8 +74,10 @@
 ||Y|| `(os.getenv var)` || || 
 ||Y|| `(os.setenv var [val])` || || 
 
-= Random numbers =
+= Numbers =
 || done? || *signature* || *description* ||
+||Y|| `(truncate x)` || convert to integer of appropriate type ||
+||Y|| `(fixnum x)` || convert to fixnum ||
 ||Y|| `(rand)` || ||
 ||Y|| `(randn)` || ||
 ||Y|| `(rand.uint32)` || ||
