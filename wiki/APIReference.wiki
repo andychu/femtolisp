@@ -19,11 +19,11 @@
 || *signature* || *description* ||
 || `(raise val)` || raise an exception (any value) ||
 || `(compare a b)` || perform an ordered comparison of any two values. returns -1, 0, or 1, for a<b, a==b, and a>b, respectively ||
-|| `~` || bitwise not ||
-|| `&` || bitwise and ||
-|| `!` || bitwise or ||
-|| `$` || bitwise xor ||
+|| `~`, `&`, `!`, `$` || bitwise not, and, or, xor ||
 || `(for lo hi (lambda (n) body))` || fast bounded iteration. the supplied function is invoked successively for n from lo to hi, inclusive. ||
+
+= Standard library =
+`label, defun, define, defmacro, identity, map, let, let*, labels, nconc, append, member, functionp, macroexpand-1, macroexpand, =, eql, /=, !=, >, <=, >=, 1+, 1-, mod, abs, caar, cadr, cdar, cddr, caaar, caadr, cadar, caddr, cdaar, cdadr, cddar, cdddr, every, any, listp, nthcdr, list-ref, list*, nlist*, lastcdr, last, map!, mapcar, filter, foldr, foldl, reverse, reduce, copy-list, copy-tree, nreverse, when, unless, dotimes, map-int, iota, error, throw, catch, unwind-protect, setf, revappend, nreconc, list-to-vector, vector-to-list, vector.map, self-evaluating-p, backquote, assert, time`
 
 = Value constructors =
 || *signature* || *description* ||
@@ -69,6 +69,7 @@ The following cvalue constructors are also available: `int8, uint8, int16, uint1
 || Y     || `(string.reverse s)` || ||
 ||       || `(string.find s str|char)` || ||
 ||       || `(string.map f str)` || ||
+
 || Y     || `(string.encode wchar-array)` || convert to UTF8 ||
 || Y     || `(string.decode str)` || convert to UCS ||
 
