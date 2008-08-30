@@ -69,7 +69,6 @@ The following cvalue constructors are also available: `int8, uint8, int16, uint1
 || Y     || `(string.reverse s)` || ||
 ||       || `(string.find s str|char)` || ||
 ||       || `(string.map f str)` || ||
-
 || Y     || `(string.encode wchar-array)` || convert to UTF8 ||
 || Y     || `(string.decode str)` || convert to UCS ||
 
