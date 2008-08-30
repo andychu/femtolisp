@@ -46,3 +46,39 @@
 || || `(stream.readline)` || ||
 || || `(stream.readlines)` || ||
 || || `(stream.readall)` || ||
+
+
+= Paths =
+|| done? || *signature* || *description* ||
+|| || `(path.combine ...)`|| ||
+|| || `(path.parts p)` || ||
+|| || `(path.absolute p)` || ||
+|| || `(path.simplify p)` || ||
+|| || `(path.tempdir)` || ||
+|| || `(path.tempname)` || ||
+|| || `(path.homedir [user])` || ||
+||Y|| `(path.cwd [new-cwd])`|| || 
+
+
+= Time and date =
+|| done? || *signature* || *description* ||
+||Y|| `(time.now)` || ||
+|| || `(time.parts t)` || ||
+|| || `(time.fromparts v)`|| ||
+||Y|| `(time.string t)`|| ||
+|| || `(time.fromstring s)`|| ||
+
+= System =
+|| done? || *signature* || *description* ||
+||Y|| `(os.name)` || || 
+||Y|| `(os.getenv var)` || || 
+||Y|| `(os.setenv var [val])` || || 
+
+= Random numbers =
+|| done? || *signature* || *description* ||
+||Y|| `(rand)` || ||
+||Y|| `(randn)` || ||
+||Y|| `(rand.uint32)` || ||
+||Y|| `(rand.uint64)` || ||
+||Y|| `(rand.double)` || ||
+||Y|| `(rand.float)` || ||
