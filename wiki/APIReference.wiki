@@ -1,5 +1,22 @@
 #summary Library and extended functionality reference
 
+= Environment =
+|| done? || *signature* || *description* ||
+||Y|| `(intern str)` || intern a string (creates a symbol) ||
+||Y|| `(set-syntax sym function)` || set the macro expander function for the given head symbol ||
+||Y|| `(symbol-syntax sym)` || get the expander for a symbol, or nil if none ||
+||Y|| `(syntax-environment)` || get the syntax environment as an assoc list ||
+||Y|| `(environment)` || get the global environment as an assoc list ||
+||Y|| `(constantp x)` || determine whether an expression is a constant ||
+||Y|| `(load filename)` || read and evaluate all expressions in a file ||
+||Y|| `(exit)` || quit interpreter ||
+
+
+= Global variables =
+|| *name* || *meaning* ||
+|| `*print-pretty*` || enable pretty printing, default is T ||
+
+
 = Strings =
 
 || done? || *signature* || *description* ||
