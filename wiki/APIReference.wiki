@@ -17,3 +17,32 @@
 ||       || `(string.map f str)` || ||
 || Y     || `(string.encode wchar-array)` || convert to UTF8 ||
 || Y     || `(string.decode str)` || convert to UCS ||
+
+
+= IO Streams =
+
+|| done? || *signature* || *description* ||
+|| || `(read [stream])` || ||
+||Y|| `(print val ...)` || ||
+|| || `(sprint stream val ...)` || ||
+||Y|| `(princ val ...)` || ||
+|| || `(sprint stream val ...)` || ||
+|| || `(file name)` || ||
+|| || `(fifo)` || ||
+|| || `(memstream size)` || ||
+|| || `(stream str)` || ||
+|| || `(stream.eof s)` || ||
+|| || `(stream.write s cvalue)` || ||
+|| || `(stream.read s ctype)` || ||
+|| || `(stream.copy to from [nbytes])` || ||
+|| || `(stream.copyuntil to from byte)` || ||
+|| || `(stream.flush s)` || ||
+|| || `(stream.pos s [new-pos])` || ||
+|| || `(stream.seek s offset)` || ||
+|| || `(stream.seekend s)` || ||
+|| || `(stream.trunc s size)` || ||
+|| || `(stream.getc s)` || ||
+|| || `(stream.tostring! s)` || ||
+|| || `(stream.readline)` || ||
+|| || `(stream.readlines)` || ||
+|| || `(stream.readall)` || ||
