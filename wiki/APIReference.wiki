@@ -82,7 +82,6 @@ The following cvalue constructors are also available: `int8, uint8, int16, uint1
 ||Y|| `(princ val ...)` || ||
 || || `(sprint stream val ...)` || ||
 || || `(file name)` || ||
-|| || `(fifo)` || ||
 || || `(memstream size)` || ||
 || || `(stream str)` || ||
 || || `(stream.eof s)` || ||
