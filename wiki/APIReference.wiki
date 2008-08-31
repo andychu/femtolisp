@@ -1,5 +1,9 @@
 #summary Library and extended functionality reference
 
+= Boolean values =
+
+`nil` or `()` is false, and every other value is true. The default truth value is `T`. femtolisp is case-sensitive, and capital T is the only truth constant. This is nice because it means all single lowercase letters are available as variable names, and big T is more eye-catching anyway.
+
 = Builtin special forms =
 || *signature* || *description* ||
 || `(quote val)` || ||
@@ -31,10 +35,12 @@
 || `(list ...)` || ||
 || `(vector ...)` || ||
 || `(vector.alloc size [init])` || make a vector of the given size, optionally initializing every element to the given value ||
-|| `(array ctype ...)` || make primitive (unboxed) array ||
+|| `(array ctype [elts ...])` || make primitive (unboxed) array ||
 || `(c-value ctype [init])` || make c-value of the given type, optionally initialize ||
 
 The following cvalue constructors are also available: `int8, uint8, int16, uint16, int32, uint32, int64, uint64, char, wchar, long, ulong, float, double`
+
+Number constructors (including `fixnum` below) accept other numbers as well as strings representing numbers.
 
 = Environment =
 || done? || *signature* || *description* ||
@@ -45,13 +51,14 @@ The following cvalue constructors are also available: `int8, uint8, int16, uint1
 ||Y|| `(syntax-environment)` || get the syntax environment as an assoc list ||
 ||Y|| `(environment)` || get the global environment as an assoc list ||
 ||Y|| `(constantp x)` || determine whether an expression is a constant ||
-||Y|| `(load filename)` || read and evaluate all expressions in a file ||
+||Y|| `(load filename)` || read and evaluate all expressions in a file (filename is a string) ||
 ||Y|| `(exit)` || quit interpreter ||
 
 
 = Global variables =
 || *name* || *meaning* ||
 || `*print-pretty*` || enable pretty printing, default is T ||
+|| `os.name` || symbol indicating the platform where we're running ||
 
 
 = Strings =
@@ -123,7 +130,6 @@ The following cvalue constructors are also available: `int8, uint8, int16, uint1
 
 = System =
 || done? || *signature* || *description* ||
-||Y|| `(os.name)` || || 
 ||Y|| `(os.getenv var)` || || 
 ||Y|| `(os.setenv var [val])` || || 
 
