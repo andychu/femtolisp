@@ -268,7 +268,7 @@ space for one more byte than they appear to. The hidden extra byte is
 always zero. This guarantees that a C function operating on the string
 will never overrun its allocated space.
 
-Strings are UTF-8 encoded. As the type implies, elements of the string are accessed as bytes, not characters. The functions beginning with `string.` can be used to manipulate strings at the character level. Strings are not required to contain valid UTF-8 data; they can be used as arbitrary byte arrays as well.
+Strings are UTF-8 encoded, but are not required to contain valid UTF-8 data and can be used as arbitrary byte arrays as well. As the type implies, elements of the string are accessed as bytes, not characters. The functions beginning with `string.` can be used to manipulate strings at the character level. Wide character strings, which allow characters to be indexed directly, are available with the type `(array wchar)`.
 
 
 ==8.5. Access==
