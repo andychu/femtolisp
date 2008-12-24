@@ -186,7 +186,7 @@ have values, hence my version is called "cvalues".
 The core of cvalues is a language for describing C data types as
 symbolic expressions:
 
-  * Primitive types are symbols `int8, uint8, int16, uint16, int32, uint32, int64, uint64, char, wchar, long, ulong, float, double, void`
+  * Primitive types are symbols `int8, uint8, int16, uint16, int32, uint32, int64, uint64, byte, wchar, long, ulong, float, double, void`
   * Arrays `(array TYPE SIZE)`, where TYPE is another C type and SIZE is either a Lisp number or a C ulong. SIZE can be omitted to represent incomplete C array types like `int a[]`. As in C, the size may only be omitted for the top level of a nested array; all array _element_ types must have explicit sizes. Examples:
 
   * `int a[][2][3]` is `(array (array (array int32 3) 2))`
@@ -220,14 +220,9 @@ and c-function).
 For example:
 {{{
 (int32 -4)
-(char 65)
+(wchar 65)
 (array 'int8 1 1 2 3 5 8)
 }}}
-
-These forms can be slightly less efficient than `(c-value ...)`
-because in many cases they will allocate a new type for the new value.
-For example, the fourth expression must create the type
-`(array int8 6)`.
 
 Cvalue constructors are generally permissive; they do the best they
 can with whatever you pass in. For example:
@@ -252,10 +247,10 @@ value it points to. Arrays are much more useful. They behave like references
 as in C, but femtoLisp tracks their sizes and performs bounds checking.
 
 Arrays are used to allocate strings. All strings share
-the incomplete array type `(array char)`:
+the incomplete array type `(array byte)`:
 
 {{{
-> (c-value '(array char) [#\h #\e #\l #\l #\o])
+> (c-value '(array byte) [#\h #\e #\l #\l #\o])
 "hello"
 
 > (sizeof that)
@@ -272,6 +267,8 @@ solve this problem, femtoLisp allocates magic strings that actually have
 space for one more byte than they appear to. The hidden extra byte is
 always zero. This guarantees that a C function operating on the string
 will never overrun its allocated space.
+
+Strings are UTF-8 encoded. As the type implies, elements of the string are accessed as bytes, not characters. The functions beginning with `string.` can be used to manipulate strings at the character level. Strings are not required to contain valid UTF-8 data; they can be used as arbitrary byte arrays as well.
 
 
 ==8.5. Access==
