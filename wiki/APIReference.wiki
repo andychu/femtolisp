@@ -14,6 +14,7 @@
 || `(while cond body)` || ||
 || `(lambda args body)` || `args` is a list or dotted list. `body` must be a single expression ||
 || `(progn ...)` || ||
+|| `(setq sym expr)` || set lexically-bound variable (sym is not evaluated) ||
 || `(trycatch body func)` || if an exception occurs evaluating `body`, `func` is invoked with the exception as its argument ||
 
 = Standard builtin functions =
@@ -25,6 +26,7 @@
 || `(compare a b)` || perform an ordered comparison of any two values. returns -1, 0, or 1, for a<b, a==b, and a>b, respectively ||
 || `~`, `&`, `!`, `$` || bitwise not, and, or, xor ||
 || `(for lo hi (lambda (n) body))` || fast bounded iteration. the supplied function is invoked successively for n from lo to hi, inclusive. ||
+|| `(eval* expr)` || evaluate in the current environment ||
 
 = Standard library =
 `label, defun, define, defmacro, identity, map, let, let*, labels, nconc, append, member, functionp, macroexpand-1, macroexpand, =, eql, /=, !=, >, <=, >=, 1+, 1-, mod, abs, caar, cadr, cdar, cddr, caaar, caadr, cadar, caddr, cdaar, cdadr, cddar, cdddr, every, any, listp, nthcdr, list-ref, list*, nlist*, lastcdr, last, map!, mapcar, filter, foldr, foldl, reverse, reduce, copy-list, copy-tree, nreverse, when, unless, dotimes, map-int, iota, error, throw, catch, unwind-protect, setf, revappend, nreconc, list-to-vector, vector-to-list, vector.map, self-evaluating-p, backquote, assert, time`
@@ -38,7 +40,7 @@
 || `(array ctype [elts ...])` || make primitive (unboxed) array ||
 || `(c-value ctype [init])` || make c-value of the given type, optionally initialize ||
 
-The following cvalue constructors are also available: `int8, uint8, int16, uint16, int32, uint32, int64, uint64, char, wchar, long, ulong, float, double`
+The following cvalue constructors are also available: `int8, uint8, int16, uint16, int32, uint32, int64, uint64, byte, wchar, long, ulong, float, double`
 
 Number constructors (including `fixnum` below) accept other numbers as well as strings representing numbers.
 
@@ -58,6 +60,7 @@ Number constructors (including `fixnum` below) accept other numbers as well as s
 = Global variables =
 || *name* || *meaning* ||
 || `*print-pretty*` || enable pretty printing, default is T ||
+|| `*print-width*` || number of columns used in prettyprinting, default 80 ||
 || `os.name` || symbol indicating the platform where we're running ||
 
 
@@ -74,7 +77,7 @@ Number constructors (including `fixnum` below) accept other numbers as well as s
 || Y     || `(string.split str sep-str)` || split string on characters in sep-str string ||
 ||       || `(string.trim s at-start at-end)` || remove given chars from beginning and end of string ||
 || Y     || `(string.reverse s)` || ||
-||       || `(string.find s str|char)` || ||
+|| Y     || `(string.find s str|char [start offset])` || ||
 ||       || `(string.map f str)` || ||
 || Y     || `(string.encode wchar-array)` || convert to UTF8 ||
 || Y     || `(string.decode str)` || convert to UCS ||
