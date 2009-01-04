@@ -48,6 +48,8 @@ sequences:
 Negative numbers may be written by prefixing any of the above with a
 single `-` .
 
+Special floating-point values can be written as `+Inf, -Inf, +NaN, -NaN`.
+
 
 ==1.3. Conses and vectors==
 
@@ -91,7 +93,7 @@ femtoLisp provides a few "read macros" that let you accomplish interesting
 tricks for textually representing data structures.
 
 || *sequence* || *meaning* ||
-|| `#.e` || evaluate expression `e` and behave as if e's value had been written in place of e ||
+|| `#.e` || evaluate expression `e` and yield its value ||
 || `#\c` || `c` is a character; read as its Unicode value ||
 || `#n=e` || read `e` and label it as `n`, where n is a decimal number ||
 || `#n#` || read as the identically-same value previously labeled `n` ||
@@ -117,7 +119,6 @@ value cannot be changed.
 ----
 
 =2. Data and execution models=
-
 
 =3. Primitive functions=
 
