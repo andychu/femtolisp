@@ -5,6 +5,7 @@ This Lisp has the following characteristics and goals:
 
   * Lisp-1 evaluation rule (ala Scheme)
   * Self-evaluating lambda (i.e. `'(lambda (x) x)` is callable)
+  * Non-opaque closures
   * Full Common Lisp-style macros
   * Dotted lambda lists for rest arguments (ala Scheme)
   * Symbols have one binding
@@ -12,10 +13,11 @@ This Lisp has the following characteristics and goals:
   * _All_ values are printable and readable
   * Case-sensitive symbol names
   * Only the minimal core built-in (i.e. written in C), but enough to provide a practical level of performance
-  * Very short (but not necessarily simple...) implementation
+  * Concise (but not necessarily simple...) implementation
   * Generally use Common Lisp operator names
   * Nothing excessively weird or fancy
 
+----
 
 =1. Syntax=
 ==1.1. Symbols==
@@ -121,7 +123,7 @@ value cannot be changed.
 =2. Data and execution models=
 
 All programs and data are built from a small set of basic data types: number,
-symbol, cons, vector, and "other". The "other" category includes machine data
+symbol, cons (pair), vector, and "other". The "other" category includes machine data
 types (such as arrays of 32-bit integers) and implementation-defined types
 (currently hash tables and IO streams).
 
@@ -130,9 +132,8 @@ femtoLisp provides essentially 3 operations: `read`, `print`, and `eval`.
 performs the opposite conversion, emitting a text representation of a value.
 `eval` treats a value as code and executes it.
 
-As you might guess, `eval` is where all the action is. However, it is still
-fairly simple. `eval` looks at a value and applies several rules to interpret
-its meaning:
+As you might guess, `eval` is where all the action is.
+`eval` looks at a value and applies several rules to interpret its meaning:
 
   * If the value is not a symbol or a cons, it evaluates to itself.
   * If the value is a symbol, return its value in the current environment if any, otherwise return its global value.
@@ -144,7 +145,7 @@ its meaning:
 A function is either a builtin (an additional basic data type I neglected
 to mention earlier!) or an expression of the form `(lambda arglist body)`.
 
-Symbols are given values in the syntax environment using `set-syntax`.
+Symbols are given values in the syntax environment using `set-syntax` or `defmacro`.
 `set` is used to set the global value of a symbol.
 
 Most of the language revolves around a fixed set of builtin functions
@@ -152,7 +153,7 @@ and syntax bindings. Builtin functions are bound to symbols whose global
 values cannot be changed, and that cannot be used as variables. The
 builtin functions are:
 
-  * Predicates: `eq, atom, not, symbolp, numberp, boundp, consp, builtinp,
+  * Predicates: `eq, atom, not, boundp, symbolp, numberp, consp, builtinp,
 vectorp, fixnump, equal, compare`
   * Values: `cons, list, car, cdr, rplaca, rplacd, vector, aref, aset,
 length, assoc`
@@ -173,8 +174,18 @@ reads and evaluates every expression in the file.
 If command-line arguments are present, the first argument must be a file
 name. That file is loaded, then femtoLisp exits.
 
-Otherwise, femtoLisp enters an interactive prompt.
+Otherwise, femtoLisp enters an interactive prompt. At the prompt, the value
+of the last evaluated expression gets bound to `that`:
 
+{{{
+> 2
+2
+
+> (1+ that)
+3
+}}}
+
+----
 
 =3. Exceptions=
 
@@ -187,6 +198,7 @@ exception is raised during evaluation, the second argument is evaluated.
 The second argument must evaluate to a function, and that function is
 subsequently called with the raised value as its argument.
 
+----
 
 =4. Delimited continuations=
 
@@ -212,7 +224,7 @@ Use `(reset ...)` to mark a control flow point. Inside the reset form,
 of the `shift` expression. Calling this continuation with a value behaves
 as if the `shift` expression had returned that value. Execution continues
 until we hit the `reset`, whose value is then returned to the caller of
-the continuation. If the continuation is not called, but the `shift`
+the continuation. If the continuation is not called, and the `shift`
 expression returns a value when it originally runs
 (for example `(shift var 2)`), then this value is immediately returned from
 the `reset` expression (nothing between the `shift` and the `reset` runs).
@@ -247,8 +259,8 @@ Here is the delimited-continuation version:
 
 For a much more satisfying example, we'll turn our modest while loop
 into a generator. The following expression yields a no-argument function
-that will return values from 0 to 9 each time it is called, and return
-the symbol `done` thereafter:
+that returns values from 0 to 9 on successive calls, and the symbol `done`
+thereafter:
 
 {{{
 (let ((ko ()))
@@ -270,8 +282,48 @@ the symbol `done` thereafter:
 The interesting thing is the way the "body" code is written: there's nothing
 special about it. It is the same as our basic `while` loop above.
 The `yield` call can return from any point, and when the generator function
-is invoked again the code will pick up right where it left off.
+is invoked again the code will pick up right where it left off. Note that
+the `while` loop does not even need to terminate; you can use a
+generator to express an infinite sequence.
 
+This pattern is abstracted by the `defgenerator` macro:
+
+{{{
+(defgenerator range-iterator (lo hi)
+  (let ((x lo))
+    (while (<= x hi)
+      (progn (yield x)
+             (setq x (+ 1 x))))
+    'done))
+}}}
+
+`(range-iterator a b)` will return a no-argument generator function
+as above. It is up to you what to do when the generator runs out of values;
+you might throw an exception, invoke a caller-supplied escape procedure, or
+return a special value like `'done`.
+
+==4.1. Limitations==
+
+`with-delimited-continuations` supports almost the whole language, but
+there are some limitations to be aware of. The feature works by converting
+the enclosed code to continuation-passing style, which means
+
+  # Functions are modified to accept an extra continuation argument.
+  # Function calls are modified to (conditionally) pass the extra continuation argument.
+
+So while you can call any function from inside `with-delimited-continuations`,
+you will not be able to capture continuations during execution of functions
+defined outside `with-delimited-continuations`. In particular, this means closures
+passed to higher-order functions defined outside cannot use `reset` and `shift`.
+A workaround is to define a CPS version of the needed higher-order function by
+enclosing its definition in `with-delimited-continuations`. A better remedy
+for this problem will be supplied in the future.
+
+If an expression in a generator function fails due to this limitation, but does
+not need to capture continuations, it can be enclosed in
+`without-delimited-continuations`.
+
+----
 
 =5. Cvalues=
 ==5.1. Introduction==
@@ -291,11 +343,10 @@ things you can do with cvalues:
 
   * Call native C functions from Lisp without wrappers
   * Wrap C functions in pure Lisp, automatically inheriting some degree of type safety
-  * Use Lisp functions as callbacks from C code
   * Use the Lisp garbage collector to reclaim malloc'd storage
   * Annotate C pointers with size information for bounds checking or serialization
-  * Attach symbolic type information to a C data structure, allowing it to inherit Lisp services such as printing a readable representation
-  * Add datatypes like strings to Lisp
+  * Attach symbolic type information to a C data structure, allowing it to be printed readably
+  * Add new types to Lisp
   * Use more efficient represenations for your Lisp programs' data
 
 femtoLisp's "cvalues" is inspired in part by Python's "ctypes" package.

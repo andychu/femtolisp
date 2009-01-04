@@ -2,7 +2,10 @@
 
 = Boolean values =
 
-`nil` or `()` is false, and every other value is true. The default truth value is `T`. femtolisp is case-sensitive, and capital T is the only truth constant. This is nice because it means all single lowercase letters are available as variable names, and big T is more eye-catching anyway.
+`nil` or `()` is false, and every other value is true. The default truth value is `T`.
+femtolisp is case-sensitive, and capital T is the only truth constant. This is nice because it
+means all single lowercase letters are available as variable names, and big T is more
+eye-catching anyway.
 
 = Builtin special forms =
 || *signature* || *description* ||
@@ -18,7 +21,7 @@
 || `(trycatch body func)` || if an exception occurs evaluating `body`, `func` is invoked with the exception as its argument ||
 
 = Standard builtin functions =
-`eq, atom, not, symbolp, numberp, boundp, consp, builtinp, vectorp, fixnump, equal, cons, car, cdr, rplaca, rplacd, eval, apply, set, prog1, +, -, *, /, <, aref, aset, length, assoc`
+`eq, atom, not, symbolp, numberp, boundp, consp, builtinp, vectorp, fixnump, equal, cons, list, car, cdr, rplaca, rplacd, eval, apply, set, prog1, +, -, *, /, <, aref, aset, length, assoc`
 
 = Nonstandard builtin functions =
 || *signature* || *description* ||
@@ -29,7 +32,7 @@
 || `(eval* expr)` || evaluate in the current environment ||
 
 = Standard library =
-`label, defun, define, defmacro, identity, map, let, let*, labels, nconc, append, member, functionp, macroexpand-1, macroexpand, =, eql, /=, !=, >, <=, >=, 1+, 1-, mod, abs, caar, cadr, cdar, cddr, caaar, caadr, cadar, caddr, cdaar, cdadr, cddar, cdddr, every, any, listp, nthcdr, list-ref, list*, nlist*, lastcdr, last, map!, mapcar, filter, foldr, foldl, reverse, reduce, copy-list, copy-tree, nreverse, when, unless, dotimes, map-int, iota, error, throw, catch, unwind-protect, setf, revappend, nreconc, list-to-vector, vector-to-list, vector.map, self-evaluating-p, backquote, assert, time`
+`label, defun, define, defmacro, identity, map, let, let*, labels, nconc, append, member, functionp, macroexpand-1, macroexpand, =, eql, /=, !=, >, <=, >=, 1+, 1-, mod, abs, caar, cadr, cdar, cddr, caaar, caadr, cadar, caddr, cdaar, cdadr, cddar, cdddr, every, any, listp, nthcdr, list-ref, list*, nlist*, lastcdr, last, map!, mapcar, filter, foldr, foldl, reverse, nreverse, reduce, copy-list, copy-tree, when, unless, dotimes, map-int, iota, error, throw, catch, unwind-protect, setf, revappend, nreconc, list-to-vector, vector-to-list, vector.map, self-evaluating-p, backquote, assert, time`
 
 = Value constructors =
 || *signature* || *description* ||
@@ -43,19 +46,17 @@
 
 The following cvalue constructors are also available: `int8, uint8, int16, uint16, int32, uint32, int64, uint64, byte, wchar, long, ulong, float, double`
 
-Number constructors (including `fixnum` below) accept other numbers as well as strings representing numbers.
-
 = Environment =
-|| done? || *signature* || *description* ||
-||Y|| `(intern str)` || intern a string (creates a symbol) ||
-||Y|| `(gensym)` || create a unique symbol ||
-||Y|| `(set-syntax sym function)` || set the macro expander function for the given head symbol ||
-||Y|| `(symbol-syntax sym)` || get the expander for a symbol, or nil if none ||
-||Y|| `(syntax-environment)` || get the syntax environment as an assoc list ||
-||Y|| `(environment)` || get the global environment as an assoc list ||
-||Y|| `(constantp x)` || determine whether an expression is a constant ||
-||Y|| `(load filename)` || read and evaluate all expressions in a file (filename is a string) ||
-||Y|| `(exit)` || quit interpreter ||
+|| *signature* || *description* ||
+|| `(intern str)` || intern a string (creates a symbol) ||
+|| `(gensym)` || create a unique symbol ||
+|| `(set-syntax sym function)` || set the macro expander function for the given head symbol ||
+|| `(symbol-syntax sym)` || get the expander for a symbol, or nil if none ||
+|| `(syntax-environment)` || get the syntax environment as an assoc list ||
+|| `(environment)` || get the global environment as an assoc list ||
+|| `(constantp x)` || determine whether an expression is a constant ||
+|| `(load filename)` || read and evaluate all expressions in a file (filename is a string) ||
+|| `(exit)` || quit interpreter ||
 
 
 = Global variables =
@@ -157,7 +158,6 @@ Hash tables use `equal` to compare keys.
 ||Y|| `(truncate x)` || convert to integer of appropriate type ||
 ||Y|| `(fixnum x)` || convert to fixnum ||
 ||Y|| `(rand)` || ||
-||Y|| `(randn)` || ||
 ||Y|| `(rand.uint32)` || ||
 ||Y|| `(rand.uint64)` || ||
 ||Y|| `(rand.double)` || ||
