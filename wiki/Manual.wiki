@@ -120,11 +120,19 @@ value cannot be changed.
 
 =2. Data and execution models=
 
-All programs and data are built from a small set of basic data types: number, symbol, cons, vector, and "other". The "other" category includes machine data types (such as arrays of 32-bit integers) and implementation-defined types (currently hash tables and IO streams).
+All programs and data are built from a small set of basic data types: number,
+symbol, cons, vector, and "other". The "other" category includes machine data
+types (such as arrays of 32-bit integers) and implementation-defined types
+(currently hash tables and IO streams).
 
-femtoLisp provides essentially 3 operations: `read`, `print`, and `eval`. `read` parses text into values (instances of the basic data types). `print` performs the opposite conversion, emitting a text representation of a value. `eval` treats a value as code and executes it.
+femtoLisp provides essentially 3 operations: `read`, `print`, and `eval`.
+`read` parses text into values (instances of the basic data types). `print`
+performs the opposite conversion, emitting a text representation of a value.
+`eval` treats a value as code and executes it.
 
-As you might guess, `eval` is where all the action is. However, it is still fairly simple. `eval` looks at a value and applies several rules to interpret its meaning:
+As you might guess, `eval` is where all the action is. However, it is still
+fairly simple. `eval` looks at a value and applies several rules to interpret
+its meaning:
 
   * If the value is not a symbol or a cons, it evaluates to itself.
   * If the value is a symbol, return its value in the current environment if any, otherwise return its global value.
@@ -133,40 +141,85 @@ As you might guess, `eval` is where all the action is. However, it is still fair
     # Otherwise `eval` everything in the list.
     # `A` must have evaluated to a function; otherwise stop with an error. Pass the values of `B`, `C`, and `D` to that function.
 
-=3. Primitive functions=
+A function is either a builtin (an additional basic data type I neglected
+to mention earlier!) or an expression of the form `(lambda arglist body)`.
+
+Symbols are given values in the syntax environment using `set-syntax`.
+`set` is used to set the global value of a symbol.
+
+Most of the language revolves around a fixed set of builtin functions
+and syntax bindings. Builtin functions are bound to symbols whose global
+values cannot be changed, and that cannot be used as variables. The
+builtin functions are:
+
+  * Predicates: `eq, atom, not, symbolp, numberp, boundp, consp, builtinp,
+vectorp, fixnump, equal, compare`
+  * Values: `cons, list, car, cdr, rplaca, rplacd, vector, aref, aset,
+length, assoc`
+  * Execution: `eval, eval*, apply, prog1, raise, for`
+  * Arithmetic: `+, -, *, /, <, ~, &, !, $`
+
+Builtin syntax bindings cannot be changed and cannot be read directly.
+The symbols involved are otherwise normal, i.e. you can use them as
+variables (though this is strongly discouraged!). The builtin syntax
+symbols are `quote, cond, if, and, or, while, lambda, trycatch, setq, progn`.
 
 
-`eq atom not set prog1 for`
-`symbolp numberp builtinp consp vectorp boundp`
-`+ - * / <`
-`apply eval`
+==2.1. Startup ==
+
+At startup, femtoLisp loads the file `system.lsp` using `load`, which
+reads and evaluates every expression in the file.
+
+If command-line arguments are present, the first argument must be a file
+name. That file is loaded, then femtoLisp exits.
+
+Otherwise, femtoLisp enters an interactive prompt.
 
 
-=4. Special forms=
+=3. Exceptions=
 
-`quote if cond lambda while and or trycatch progn`
+The function `raise` signals an error by throwing a value to the
+closest dynamically-enclosing exception handler.
 
-
-=5. Data structures=
-
-`cons car cdr rplaca rplacd list`
-`alloc vector aref aset length`
-
-
-=6. Other functions=
-
-`read print princ load exit`
-`equal compare`
-`gensym`
+Exceptions are handled by the form `(trycatch expr function)`. This
+form evaluates its first argument (the expression) as usual, but if an
+exception is raised during evaluation, the second argument is evaluated.
+The second argument must evaluate to a function, and that function is
+subsequently called with the raised value as its argument.
 
 
-=7. Exceptions=
+=4. Delimited continuations=
 
-`trycatch raise`
+It's delightful, it's delicious, it's... delimited!
+
+Delimited continuations provide the subset of Scheme's `call/cc` needed
+to implement generators (or coroutines), and a few more tricks besides.
+You get real, first-class, restartable continuations (as functions), callable
+from anywhere. The only catch is that their state is limited to an
+explicitly delimited region of the program. This could be considered an
+advantage however, since it means you need only look at the program to see
+the range of places a continuation might return to.
+
+To use the feature, surround a piece of code with
+`(with-delimited-continuations ...)`. Continuations can be realized
+anywhere inside this form. Such continuations will capture the execution
+state of code inside the form; stackframes higher up (e.g. the caller
+of the form) are lost.
+
+Continuations are realized by the operators `reset` and `shift`.
+Use `(reset ...)` to mark a control flow point. Inside the reset form,
+`(shift var expr)` will evaluate `expr` with `var` bound to the continuation
+of the `shift` expression. Calling this continuation with a value behaves
+as if the `shift` expression had returned that value. Execution continues
+until we hit the `reset`, whose value is then returned to the caller of
+the continuation. If the continuation is not called, but the `shift`
+expression returns a value when it originally runs
+(for example `(shift var 2)`), then this value is immediately returned from
+the `reset` expression (nothing between the `shift` and the `reset` runs).
 
 
-=8. Cvalues=
-==8.1. Introduction==
+=5. Cvalues=
+==5.1. Introduction==
 
 femtoLisp allows you to use the full range of C data types on
 dynamically-typed Lisp values. The motivation for this feature is that
@@ -195,7 +248,7 @@ Lisp doesn't really have first-class types the way Python does, but it does
 have values, hence my version is called "cvalues".
 
 
-==8.2. Type representations==
+==5.2. Type representations==
 
 The core of cvalues is a language for describing C data types as
 symbolic expressions:
@@ -226,7 +279,7 @@ c type. Every cvalue has a size, but incomplete types will cause
 the type of a cvalue.
 
 
-==8.3. Constructors==
+==5.3. Constructors==
 
 For convenience, a specialized constructor is provided for each
 class of C type (primitives, pointer, array, struct, union, enum,
@@ -252,7 +305,7 @@ to make an array we had to pass a vector. You can think of `c-value` as
 a kind of lisp-to-C cast operator.
 
 
-==8.4. Pointers, arrays, and strings==
+==5.4. Pointers, arrays, and strings==
 
 Pointer types are provided for completeness and C interoperability, but
 they should not generally be used from Lisp. femtoLisp doesn't know
@@ -285,13 +338,13 @@ will never overrun its allocated space.
 Strings are UTF-8 encoded, but are not required to contain valid UTF-8 data and can be used as arbitrary byte arrays as well. As the type implies, elements of the string are accessed as bytes, not characters. The functions beginning with `string.` can be used to manipulate strings at the character level. Wide character strings, which allow characters to be indexed directly, are available with the type `(array wchar)`.
 
 
-==8.5. Access==
+==5.5. Access==
 
 
-==8.6. Memory management concerns==
+==5.6. Memory management concerns==
 
 
-==8.7. Guest functions==
+==5.7. Guest functions==
 
 Functions written in C but designed to operate on Lisp values are
 known here as "guest functions". Although they are foreign, they live in
@@ -307,4 +360,4 @@ Guest functions must also be aware of the femtoLisp API and garbage
 collector.
 
 
-==8.8. Native functions==
+==5.8. Native functions==

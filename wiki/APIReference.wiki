@@ -59,9 +59,11 @@ Number constructors (including `fixnum` below) accept other numbers as well as s
 
 = Global variables =
 || *name* || *meaning* ||
+|| `*install-dir*` || location of femtoLisp executable ||
+|| `argv` || list of command-line arguments (as strings) ||
+|| `os.name` || symbol indicating the platform where we're running ||
 || `*print-pretty*` || enable pretty printing, default is T ||
 || `*print-width*` || number of columns used in prettyprinting, default 80 ||
-|| `os.name` || symbol indicating the platform where we're running ||
 
 
 = Strings =
