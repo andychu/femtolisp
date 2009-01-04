@@ -126,9 +126,9 @@ femtoLisp provides essentially 3 operations: `read`, `print`, and `eval`. `read`
 
 As you might guess, `eval` is where all the action is. However, it is still fairly simple. `eval` looks at a value and applies several rules to interpret its meaning:
 
-* If the value is not a symbol or a cons, it evaluates to itself.
-* If the value is a symbol, return its value in the current environment if any, otherwise return its global value.
-* Otherwise we have an expression such as `(A B C D)`
+  * If the value is not a symbol or a cons, it evaluates to itself.
+  * If the value is a symbol, return its value in the current environment if any, otherwise return its global value.
+  * Otherwise we have an expression such as `(A B C D)`
     # If `A` is a symbol, look in the syntax environment. If it is found there, pass the expression to the associated function and `eval` the result of that. Stop.
     # Otherwise `eval` everything in the list.
     # `A` must have evaluated to a function; otherwise stop with an error. Pass the values of `B`, `C`, and `D` to that function.
