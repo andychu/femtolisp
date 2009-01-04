@@ -217,6 +217,62 @@ expression returns a value when it originally runs
 (for example `(shift var 2)`), then this value is immediately returned from
 the `reset` expression (nothing between the `shift` and the `reset` runs).
 
+As an example, we can use this feature to implement loops by repeatedly
+calling the continuation of the top of the loop. We will translate the
+following `while` loop:
+
+{{{
+(let ((x 0))
+  (while (< x 10)
+    (progn (print x)
+           (setq x (+ 1 x)))))
+}}}
+
+Here is the delimited-continuation version:
+
+{{{
+(with-delimited-continuations
+  (let ((x 0))
+    (reset
+     (let ((l nil))
+       (let ((k (shift k (k k))))
+         (if (< x 10)
+             (progn (setq l (progn (print x)
+                                   (setq x (+ 1 x))))
+                    (k k))
+           l))))))
+}}}
+
+`(k k)` acts like a jump that rebinds k to itself, then performs the
+`(< x 10)` test again.
+
+For a much more satisfying example, we'll turn our modest while loop
+into a generator. The following expression yields a no-argument function
+that will return values from 0 to 9 each time it is called, and return
+the symbol `done` thereafter:
+
+{{{
+(let ((ko ()))
+  (lambda ()
+    (with-delimited-continuations
+     (if ko (ko 0)
+       (reset
+        (let ((yield
+               (lambda (v)
+                 (shift yk (progn (setq ko yk) v)))))
+          ; -- begin body
+          (let ((x 0))
+            (while (< x 10)
+              (progn (yield x)
+                     (setq x (+ 1 x))))
+            'done)))))))
+}}}
+
+The interesting thing is the way the "body" code is written: there's nothing
+special about it. It is the same as our basic `while` loop above.
+The `yield` call can return from any point, and when the generator function
+is invoked again the code will pick up right where it left off.
+
 
 =5. Cvalues=
 ==5.1. Introduction==
