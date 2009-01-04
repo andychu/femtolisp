@@ -232,15 +232,14 @@ Here is the delimited-continuation version:
 
 {{{
 (with-delimited-continuations
-  (let ((x 0))
-    (reset
-     (let ((l nil))
-       (let ((k (shift k (k k))))
-         (if (< x 10)
-             (progn (setq l (progn (print x)
-                                   (setq x (+ 1 x))))
-                    (k k))
-           l))))))
+ (let ((x 0))
+   (reset
+    (let ((k (shift k (k k))))
+      (if (< x 10)
+          (progn (print x)
+                 (setq x (+ 1 x))
+                 (k k))
+        x)))))
 }}}
 
 `(k k)` acts like a jump that rebinds k to itself, then performs the
