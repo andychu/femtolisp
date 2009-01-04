@@ -39,6 +39,7 @@
 || `(vector.alloc size [init])` || make a vector of the given size, optionally initializing every element to the given value ||
 || `(array ctype [elts ...])` || make primitive (unboxed) array ||
 || `(c-value ctype [init])` || make c-value of the given type, optionally initialize ||
+|| `(table key val key val ...)` || ||
 
 The following cvalue constructors are also available: `int8, uint8, int16, uint16, int32, uint32, int64, uint64, byte, wchar, long, ulong, float, double`
 
@@ -84,6 +85,19 @@ Number constructors (including `fixnum` below) accept other numbers as well as s
 || Y     || `(string.encode wchar-array)` || convert to UTF8 ||
 || Y     || `(string.decode str)` || convert to UCS ||
 
+
+= Hash Tables =
+Hash tables use `equal` to compare keys.
+
+|| *signature* || *description* ||
+|| `(put table key value)` || add or update key ||
+|| `(get table key [default])` || look up key. if the key is not found, an exception is thrown unless a default value is specified, in which case it is returned. ||
+|| `(has table key)` || query whether table contains key ||
+|| `(del table key)` || remove a key, throwing an exception if not found ||
+|| `(table.foldl f zero table)` || call (f k v X) for successive key/value pairs, where X is the previous result, starting at the given zero ||
+|| `(table.keys table)` || ||
+|| `(table.pairs table)` || ||
+|| `(hash val)` || compute a numeric hash for a value ||
 
 = IO Streams =
 
