@@ -29,7 +29,7 @@
 || `(eval* expr)` || evaluate in the current environment ||
 
 = Standard library =
-`label, define, define-macro, identity, map, let, let*, letrec, nconc, append, assv, assoc, member, memv, memq, function?, macroexpand-1, macroexpand, =, /=, !=, >, <=, >=, 1+, 1-, mod, abs, caar, cadr, cdar, cddr, caaar, caadr, cadar, caddr, cdaar, cdadr, cddar, cdddr, every, any, list?, nthcdr, list-ref, list*, nlist*, lastcdr, last, map!, mapcar, filter, foldr, foldl, reverse, nreverse, copy-list, copy-tree, when, unless, dotimes, map-int, iota, error, throw, catch, unwind-protect, revappend, nreconc, list-to-vector, vector-to-list, vector.map, self-evaluating?, backquote, assert, time, do, case`
+`label, define, define-macro, identity, map, let, let*, letrec, nconc, append, assv, assoc, member, memv, memq, function?, char?, macroexpand-1, macroexpand, =, /=, !=, >, <=, >=, 1+, 1-, mod, abs, caar, cadr, cdar, cddr, caaar, caadr, cadar, caddr, cdaar, cdadr, cddar, cdddr, every, any, list?, nthcdr, list-ref, list*, nlist*, lastcdr, last, map!, mapcar, filter, foldr, foldl, reverse, nreverse, copy-list, copy-tree, when, unless, dotimes, map-int, iota, error, throw, catch, unwind-protect, revappend, nreconc, list-to-vector, vector-to-list, vector.map, self-evaluating?, backquote, assert, time, do, case, delete-duplicates`
 
 = Value constructors =
 || *signature* || *description* ||
@@ -53,7 +53,7 @@ The following cvalue constructors are also available: `int8, uint8, int16, uint1
 || `(environment)` || get the global environment as an assoc list ||
 || `(constant? x)` || determine whether an expression is a constant ||
 || `(load filename)` || read and evaluate all expressions in a file (filename is a string) ||
-|| `(exit)` || quit interpreter ||
+|| `(exit [code])` || quit interpreter ||
 
 
 = Global variables =
@@ -71,6 +71,7 @@ The following cvalue constructors are also available: `int8, uint8, int16, uint1
 = Strings =
 
 || done? || *signature* || *description* ||
+|| Y     || `(string? x)` || ||
 || Y     || `(string a b ...)` || append/construct ||
 || Y     || `(string.inc str index [nchars])` || increment a byte index by n characters (default 1) ||
 || Y     || `(string.dec str index [nchars])` ||  ||
@@ -86,12 +87,14 @@ The following cvalue constructors are also available: `int8, uint8, int16, uint1
 || Y     || `(string.encode wchar-array)` || convert to UTF8 ||
 || Y     || `(string.decode str)` || convert to UCS ||
 || Y     || `(string.tail str n)` || drop n characters from the front of str ||
+|| Y     || `(number->string n [radix])` ||
 
 
 = Hash Tables =
 Hash tables use `equal` to compare keys.
 
 || *signature* || *description* ||
+|| `(table? x)` || ||
 || `(put! table key value)` || add or update key ||
 || `(get table key [default])` || look up key. if the key is not found, an exception is thrown unless a default value is specified, in which case it is returned. ||
 || `(has table key)` || query whether table contains key ||
@@ -165,3 +168,9 @@ Hash tables use `equal` to compare keys.
 ||Y|| `(rand.uint64)` || ||
 ||Y|| `(rand.double)` || ||
 ||Y|| `(rand.float)` || ||
+
+= C values =
+|| *signature* || *description* ||
+|| `(sizeof x)` || size in bytes of c value or type ||
+|| `(typeof x)` || symbolic representation of the type of any value ||
+|| `(copy x)` || copy a mutable c value ||
