@@ -3,18 +3,14 @@
 =0. Argument=
 This Lisp has the following characteristics and goals:
 
-  * Lisp-1 evaluation rule (ala Scheme)
-  * Self-evaluating lambda (i.e. `'(lambda (x) x)` is callable)
-  * Non-opaque closures
-  * Full Common Lisp-style macros
-  * Dotted lambda lists for rest arguments (ala Scheme)
-  * Symbols have one binding
+  * Scheme-like, but only as far as avoiding spurious differences. No compliance with standards.
+  * Non-opaque closures. All functions (and environments) are s-expressions.
+  * Common Lisp-style macros
   * Builtin functions are constants
   * _All_ values are printable and readable
   * Case-sensitive symbol names
   * Only the minimal core built-in (i.e. written in C), but enough to provide a practical level of performance
   * Concise (but not necessarily simple...) implementation
-  * Generally use Common Lisp operator names
   * Nothing excessively weird or fancy
 
 ----
@@ -46,14 +42,21 @@ sequences:
   * `N.NN[eE][+-]NN[f]` floating point (`f` means single precision)
   * `0xNNN...` where N is a hexadecimal digit
   * `0NNN...` where N is an octal digit
+  * -0.0 and -0.0f, IEEE distinguished -0 values
+  * Special IEEE values: `+Inf, -Inf, +NaN, -NaN, +nan.0, +inf.0, -nan.0, -inf.0`
+  * C99-style hex float literals
+  * `#b`, `#o`, `#d`, `#x` prefixes for binary, octal, decimal, and hex literals
 
-Negative numbers may be written by prefixing any of the above with a
-single `-` .
-
-Special floating-point values can be written as `+Inf, -Inf, +NaN, -NaN`.
+Negative numbers may be written by prefixing any of the above with a `-` .
 
 
-==1.3. Conses and vectors==
+==1.3. Special values==
+
+`#t` and `#f` are boolean literals (not case sensitive).
+`()` is the empty list.
+
+
+==1.4. Conses and vectors==
 
 The text `(a b c)` parses to the structure
 `(cons a (cons b (cons c nil)))` where a, b, and c are arbitrary
@@ -68,13 +71,14 @@ The text `[a b c]` parses to a vector of expressions a, b, and c.
 The syntax `#(a b c)` has the same meaning.
 
 
-==1.4. Comments==
+==1.5. Comments==
 
 Text between a semicolon `;` and the next end-of-line is skipped.
 Text between `#|` and `|#` is also skipped.
+Datum comment `#;` skips the next single s-expression.
 
 
-==1.5. Prefix tokens==
+==1.6. Prefix tokens==
 
 There are five special prefix tokens which parse as follows:
 
@@ -89,7 +93,7 @@ There are five special prefix tokens which parse as follows:
 `,.a` is equivalent to `(*comma-dot* a)`.
 
 
-==1.6. Other read macros==
+==1.7. Other read macros==
 
 femtoLisp provides a few "read macros" that let you accomplish interesting
 tricks for textually representing data structures.
@@ -110,20 +114,19 @@ When a read macro involves persistent state (e.g. label assignments), that
 state is valid only within the closest enclosing call to `read`.
 
 
-==1.7. Builtins==
+==1.8. Builtins==
 
 Builtin functions are represented as opaque constants. Every builtin
-function is the value of some constant symbol, so the builtin `eq`,
-for example, can be written as `#.eq` ("the value of symbol eq").
-Note that `eq` itself is still an ordinary symbol, except that its
+function is the value of some constant symbol, so the builtin `eq?`,
+for example, can be written as `#.eq?` ("the value of symbol eq?").
+Note that `eq?` itself is still an ordinary symbol, except that its
 value cannot be changed.
 
 ----
 
 =2. Data and execution models=
 
-All programs and data are built from a small set of basic data types: number,
-symbol, cons (pair), vector, and "other". The "other" category includes machine data
+All programs and data are built from a small set of basic data types: number, boolean, symbol, cons (pair), vector, and "other". The "other" category includes machine data
 types (such as arrays of 32-bit integers) and implementation-defined types
 (currently hash tables and IO streams).
 
@@ -153,17 +156,16 @@ and syntax bindings. Builtin functions are bound to symbols whose global
 values cannot be changed, and that cannot be used as variables. The
 builtin functions are:
 
-  * Predicates: `eq, atom, not, boundp, symbolp, numberp, consp, builtinp,
-vectorp, fixnump, equal, compare`
-  * Values: `cons, list, car, cdr, rplaca, rplacd, vector, aref, aset,
-length, assoc`
+  * Predicates: `eq?, eqv?, equal?, atom?, not, null?, boolean?, bound?, symbol?, number?, pair?, builtin?, vector?, fixnum?`
+  * Values: `cons, list, car, cdr, set-car!, set-cdr!, vector, aref, aset!,
+length, assq`
   * Execution: `eval, eval*, apply, prog1, raise, for`
-  * Arithmetic: `+, -, *, /, <, ~, &, !, $`
+  * Arithmetic: `+, -, *, /, <, lognot, logand, logior, logxor, compare`
 
 Builtin syntax bindings cannot be changed and cannot be read directly.
 The symbols involved are otherwise normal, i.e. you can use them as
 variables (though this is strongly discouraged!). The builtin syntax
-symbols are `quote, cond, if, and, or, while, lambda, trycatch, setq, progn`.
+symbols are `quote, cond, if, and, or, while, lambda, trycatch, set!, begin`.
 
 
 ==2.1. Startup ==
@@ -226,7 +228,7 @@ as if the `shift` expression had returned that value. Execution continues
 until we hit the `reset`, whose value is then returned to the caller of
 the continuation. If the continuation is not called, and the `shift`
 expression returns a value when it originally runs
-(for example `(shift var 2)`), then this value is immediately returned from
+(for example `(shift k 2)`), then this value is immediately returned from
 the `reset` expression (nothing between the `shift` and the `reset` runs).
 
 As an example, we can use this feature to implement loops by repeatedly
@@ -236,8 +238,8 @@ following `while` loop:
 {{{
 (let ((x 0))
   (while (< x 10)
-    (progn (print x)
-           (setq x (+ 1 x)))))
+    (begin (print x)
+           (set! x (+ 1 x)))))
 }}}
 
 Here is the delimited-continuation version:
@@ -248,8 +250,8 @@ Here is the delimited-continuation version:
    (reset
     (let ((k (shift k (k k))))
       (if (< x 10)
-          (progn (print x)
-                 (setq x (+ 1 x))
+          (begin (print x)
+                 (set! x (+ 1 x))
                  (k k))
         x)))))
 }}}
@@ -270,12 +272,12 @@ thereafter:
        (reset
         (let ((yield
                (lambda (v)
-                 (shift yk (progn (setq ko yk) v)))))
+                 (shift yk (begin (set! ko yk) v)))))
           ; -- begin body
           (let ((x 0))
             (while (< x 10)
-              (progn (yield x)
-                     (setq x (+ 1 x))))
+              (begin (yield x)
+                     (set! x (+ 1 x))))
             'done)))))))
 }}}
 
@@ -292,8 +294,8 @@ This pattern is abstracted by the `defgenerator` macro:
 (defgenerator range-iterator (lo hi)
   (let ((x lo))
     (while (<= x hi)
-      (progn (yield x)
-             (setq x (+ 1 x))))
+      (begin (yield x)
+             (set! x (+ 1 x))))
     'done))
 }}}
 
@@ -441,7 +443,7 @@ space for one more byte than they appear to. The hidden extra byte is
 always zero. This guarantees that a C function operating on the string
 will never overrun its allocated space.
 
-Strings are UTF-8 encoded, but are not required to contain valid UTF-8 data and can be used as arbitrary byte arrays as well. As the type implies, elements of the string are accessed as bytes, not characters. The functions beginning with `string.` can be used to manipulate strings at the character level. Wide character strings, which allow characters to be indexed directly, are available with the type `(array wchar)`.
+Strings are UTF-8 encoded by default, but are not required to contain valid UTF-8 data and can be used as arbitrary byte arrays as well. As the type implies, elements of the string are accessed as bytes, not characters. The functions beginning with `string.` can be used to manipulate strings at the character level. Wide character strings, which allow characters to be indexed directly, are available with the type `(array wchar)`.
 
 
 ==5.5. Access==
@@ -456,7 +458,7 @@ Functions written in C but designed to operate on Lisp values are
 known here as "guest functions". Although they are foreign, they live in
 Lisp's house and so live by its rules. Guest functions are what you
 use to write interpreter extensions, for example to implement a function
-like `assoc` in C for performance.
+like `assq` in C for performance.
 
 Guest functions must have a particular signature:
 {{{
