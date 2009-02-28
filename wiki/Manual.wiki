@@ -4,7 +4,8 @@
 This Lisp has the following characteristics and goals:
 
   * Scheme-like, but only as far as avoiding spurious differences. No compliance with standards.
-  * Non-opaque closures. All functions (and environments) are s-expressions.
+  * Non-opaque closures. All functions (and environments) are s-expressions. Performance is good despite this.
+  * Super-sleek API
   * Common Lisp-style macros
   * Builtin functions are constants
   * _All_ values are printable and readable
@@ -53,6 +54,7 @@ Negative numbers may be written by prefixing any of the above with a `-` .
 ==1.3. Special values==
 
 `#t` and `#f` are boolean literals (not case sensitive).
+
 `()` is the empty list.
 
 
@@ -65,8 +67,6 @@ expressions.
 The text `(a . b)` parses to the structure
 `(cons a b)` where a and b are arbitrary expressions.
 
-The text `()` reads as the symbol `nil`.
-
 The text `[a b c]` parses to a vector of expressions a, b, and c.
 The syntax `#(a b c)` has the same meaning.
 
@@ -74,7 +74,9 @@ The syntax `#(a b c)` has the same meaning.
 ==1.5. Comments==
 
 Text between a semicolon `;` and the next end-of-line is skipped.
+
 Text between `#|` and `|#` is also skipped.
+
 Datum comment `#;` skips the next single s-expression.
 
 
@@ -157,8 +159,7 @@ values cannot be changed, and that cannot be used as variables. The
 builtin functions are:
 
   * Predicates: `eq?, eqv?, equal?, atom?, not, null?, boolean?, bound?, symbol?, number?, pair?, builtin?, vector?, fixnum?`
-  * Values: `cons, list, car, cdr, set-car!, set-cdr!, vector, aref, aset!,
-length, assq`
+  * Values: `cons, list, car, cdr, set-car!, set-cdr!, vector, aref, aset!, length, assq`
   * Execution: `eval, eval*, apply, prog1, raise, for`
   * Arithmetic: `+, -, *, /, <, lognot, logand, logior, logxor, compare`
 
