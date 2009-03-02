@@ -18,7 +18,26 @@
 || `(trycatch body func)` || if an exception occurs evaluating `body`, `func` is invoked with the exception as its argument ||
 
 = Standard builtin functions =
-`eq?, eqv?, equal?, atom?, not, null?, symbol?, number?, boolean?, bound?, pair?, builtin?, vector?, fixnum?, cons, list, car, cdr, set-car!, set-cdr!, eval, apply, set!, prog1, +, -, *, /, <, aref, aset!, length, assq`
+
+== Predicates ==
+
+`eq?, eqv?, equal?, atom?, not, null?, symbol?, number?, boolean?, bound?, pair?, builtin?, vector?, fixnum?`
+
+== Lists ==
+
+`cons, list, car, cdr, set-car!, set-cdr!`
+
+== Execution ==
+
+`eval, apply, prog1`
+
+== Arithmetic ==
+
+`+, -, *, /, <`
+
+== Sequences ==
+
+`vector, aref, aset!, length`
 
 = Nonstandard builtin functions =
 || *signature* || *description* ||
@@ -29,7 +48,26 @@
 || `(eval* expr)` || evaluate in the current environment ||
 
 = Standard library =
-`label, define, define-macro, identity, map, let, let*, letrec, nconc, append, assv, assoc, member, memv, memq, function?, char?, macroexpand-1, macroexpand, =, /=, !=, >, <=, >=, 1+, 1-, mod, abs, caar, cadr, cdar, cddr, caaar, caadr, cadar, caddr, cdaar, cdadr, cddar, cdddr, every, any, list?, nthcdr, list-ref, list*, nlist*, lastcdr, last, map!, mapcar, filter, foldr, foldl, reverse, nreverse, copy-list, copy-tree, when, unless, dotimes, map-int, iota, error, throw, catch, unwind-protect, revappend, nreconc, list-to-vector, vector-to-list, vector.map, self-evaluating?, backquote, assert, time, do, case, delete-duplicates`
+
+== Naming ==
+
+`label, define, define-macro, let, let*, letrec`
+
+== Lists ==
+
+`map, nconc, append, assoc, assv, assq, member, memv, memq, caar, cadr, cdar, cddr, caaar, caadr, cadar, caddr, cdaar, cdadr, cddar, cdddr, every, any, list?, list-tail, list-ref, list*, nlist*, lastcdr, last, map!, mapcar, filter, foldr, foldl, reverse, nreverse, copy-list, copy-tree, map-int, iota, revappend, nreconc, delete-duplicates`
+
+== Predicates ==
+
+`function?, char?, =, /=, !=, >, <=, >=, self-evaluating?`
+
+== Control ==
+
+`when, unless, dotimes, do, case, error, throw, catch, unwind-protect, time, assert`
+
+== Misc ==
+
+`backquote, macroexpand-1, macroexpand, list->vector, vector->list, vector.map, identity, 1+, 1-, mod, abs`
 
 = Value constructors =
 || *signature* || *description* ||
