@@ -55,7 +55,7 @@
 
 == Lists ==
 
-`map, nconc, append, assoc, assv, assq, member, memv, memq, caar, cadr, cdar, cddr, caaar, caadr, cadar, caddr, cdaar, cdadr, cddar, cdddr, every, any, list?, list-tail, list-ref, list*, nlist*, lastcdr, last, map!, mapcar, filter, foldr, foldl, reverse, nreverse, copy-list, copy-tree, map-int, iota, revappend, nreconc, delete-duplicates`
+`map, nconc, append, assoc, assv, assq, member, memv, memq, caar, cadr, cdar, cddr, caaar, caadr, cadar, caddr, cdaar, cdadr, cddar, cdddr, every, any, list?, list-tail, list-ref, list*, nlist*, lastcdr, last, length=, map!, mapcar, filter, foldr, foldl, reverse, nreverse, copy-list, copy-tree, map-int, iota, revappend, nreconc, delete-duplicates`
 
 == Predicates ==
 
@@ -121,7 +121,7 @@ The following cvalue constructors are also available: `int8, uint8, int16, uint1
 || Y     || `(string.trim s at-start at-end)` || remove given chars from beginning and end of string ||
 || Y     || `(string.reverse s)` || ||
 || Y     || `(string.find s str|char [start offset])` || ||
-||       || `(string.map f str)` || ||
+|| Y     || `(string.map f str)` || ||
 || Y     || `(string.encode wchar-array)` || convert to UTF8 ||
 || Y     || `(string.decode str)` || convert to UCS ||
 || Y     || `(string.tail str n)` || drop n characters from the front of str ||
@@ -146,17 +146,18 @@ Hash tables use `equal` to compare keys.
 
 || done? || *signature* || *description* ||
 ||Y|| `(iostream? x)` || ||
-||Y|| `(read [stream])` || ||
+||Y|| `(read [stream])` || returns `#f` on end-of-file. call `io.eof?` after `read` to distinguish this from reading the false value. ||
 ||Y|| `(print val ...)` || ||
 ||Y|| `(io.print stream val ...)` || ||
 ||Y|| `(princ val ...)` || ||
 ||Y|| `(io.princ stream val ...)` || ||
 ||Y|| `(file name [mode options...])` || mode options can be `:read, :write, :append, :create, :truncate` ||
-|| || `(memstream size)` || ||
+||Y|| `(buffer)` || create an in-memory IO stream ||
 || || `(stream str)` || ||
-||Y|| `(io.eof s)` || ||
-|| || `(io.write s cvalue)` || ||
-|| || `(io.read s ctype)` || ||
+||Y|| `(io.eof? s)` || ||
+||Y|| `(io.write s cvalue)` || ||
+||Y|| `(io.read s ctype)` || ||
+||Y|| `(io.close s)` || ||
 || || `(io.copy to from [nbytes])` || ||
 || || `(io.copyuntil to from byte)` || ||
 ||Y|| `(io.flush s)` || ||
@@ -165,10 +166,12 @@ Hash tables use `equal` to compare keys.
 || || `(io.seekend s)` || ||
 || || `(io.trunc s size)` || ||
 ||Y|| `(io.getc s)` || ||
-|| || `(io.tostring! s)` || ||
-|| || `(io.readline)` || ||
-|| || `(io.readlines)` || ||
-|| || `(io.readall)` || ||
+||Y|| `(io.putc c)` || ||
+||Y|| `(io.tostring! s)` || destructively convert a buffer to a string ||
+||Y|| `(io.readuntil s delim)` || ||
+||Y|| `(io.readline s)` || ||
+|| || `(io.readlines s)` || ||
+|| || `(io.readall s)` || ||
 
 
 = Paths =
