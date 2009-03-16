@@ -43,7 +43,7 @@
 || *signature* || *description* ||
 || `(raise val)` || raise an exception (any value) ||
 || `(compare a b)` || perform an ordered comparison of any two values. returns -1, 0, or 1, for a<b, a==b, and a>b, respectively ||
-|| `lognot`, `logand`, `logior`, `logxor` || bitwise not, and, or, xor ||
+|| `lognot`, `logand`, `logior`, `logxor`, `ash` || bitwise not, and, or, xor, bit shift ||
 || `(for lo hi (lambda (n) body))` || fast bounded iteration. the supplied function is invoked successively for n from lo to hi, inclusive. ||
 || `(eval* expr)` || evaluate in the current environment ||
 
@@ -55,11 +55,11 @@
 
 == Lists ==
 
-`map, nconc, append, assoc, assv, assq, member, memv, memq, caar, cadr, cdar, cddr, caaar, caadr, cadar, caddr, cdaar, cdadr, cddar, cdddr, every, any, list?, list-tail, list-ref, list*, nlist*, lastcdr, last, length=, map!, mapcar, filter, foldr, foldl, reverse, nreverse, copy-list, copy-tree, map-int, iota, revappend, nreconc, delete-duplicates`
+`map, nconc, append, assoc, assv, assq, member, memv, memq, caar, cadr, cdar, cddr, caaar, caadr, cadar, caddr, cdaar, cdadr, cddar, cdddr, every, any, list?, list-tail, list-ref, list*, nlist*, lastcdr, last, length=, map!, mapcar, for-each, filter, foldr, foldl, reverse, nreverse, copy-list, copy-tree, map-int, iota, revappend, nreconc, delete-duplicates`
 
 == Predicates ==
 
-`function?, char?, =, /=, !=, >, <=, >=, self-evaluating?`
+`function?, char?, =, /=, !=, >, <=, >=, self-evaluating?, negative?, positive?, zero?, even?, odd?`
 
 == Control ==
 
@@ -104,6 +104,7 @@ The following cvalue constructors are also available: `int8, uint8, int16, uint1
 || `*stdin*, *stdout*, *stderr*` || io streams for standard descriptors ||
 || `*input-stream*, *output-stream*` || current default io streams ||
 || `*directory-separator*` || the directory separator on the local platform ||
+|| `*linefeed*` || the line terminator on the local platform ||
 
 
 = Strings =
@@ -125,7 +126,7 @@ The following cvalue constructors are also available: `int8, uint8, int16, uint1
 || Y     || `(string.encode wchar-array)` || convert to UTF8 ||
 || Y     || `(string.decode str)` || convert to UCS ||
 || Y     || `(string.tail str n)` || drop n characters from the front of str ||
-|| Y     || `(number->string n [radix])` ||
+|| Y     || `(number->string n [radix])` || ||
 
 
 = Hash Tables =
@@ -200,15 +201,15 @@ Hash tables use `equal` to compare keys.
 ||Y|| `(os.setenv var [val])` || || 
 
 = Numbers =
-|| done? || *signature* || *description* ||
-||Y|| `(truncate x)` || convert to integer of appropriate type ||
-||Y|| `(fixnum x)` || convert to fixnum ||
-||Y|| `(integer? x)` || is x integer valued? ||
-||Y|| `(rand)` || ||
-||Y|| `(rand.uint32)` || ||
-||Y|| `(rand.uint64)` || ||
-||Y|| `(rand.double)` || ||
-||Y|| `(rand.float)` || ||
+|| *signature* || *description* ||
+|| `(truncate x)` || convert to integer of appropriate type ||
+|| `(fixnum x)` || convert to fixnum ||
+|| `(integer? x)` || is x integer valued? ||
+|| `(rand)` || ||
+|| `(rand.uint32)` || ||
+|| `(rand.uint64)` || ||
+|| `(rand.double)` || ||
+|| `(rand.float)` || ||
 
 = C values =
 || *signature* || *description* ||
