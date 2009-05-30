@@ -289,10 +289,10 @@ is invoked again the code will pick up right where it left off. Note that
 the `while` loop does not even need to terminate; you can use a
 generator to express an infinite sequence.
 
-This pattern is abstracted by the `defgenerator` macro:
+This pattern is abstracted by the `define-generator` macro:
 
 {{{
-(defgenerator range-iterator (lo hi)
+(define-generator range-iterator (lo hi)
   (let ((x lo))
     (while (<= x hi)
       (begin (yield x)
