@@ -128,6 +128,12 @@ The following cvalue constructors are also available: `int8, uint8, int16, uint1
 || Y     || `(string.decode str)` || convert to UCS ||
 || Y     || `(string.tail str n)` || drop n characters from the front of str ||
 || Y     || `(number->string n [radix])` || ||
+|| Y     || `(string.lpad str n c)` || pad string to length n by adding character c on the left. ||
+|| Y     || `(string.rpad str n c)` || pad string to length n by adding character c on the right. ||
+|| Y     || `(string.rep s k)` || build a string of k copies of s ||
+|| Y     || `(string.join strlist sep)` || join strings from a list, with the given separator between them ||
+|| Y     || `(char.upcase c)` || ||
+|| Y     || `(char.downcase c)` || ||
 
 
 = Hash Tables =
@@ -143,6 +149,7 @@ Hash tables use `equal` to compare keys.
 || `(table.keys table)` || ||
 || `(table.pairs table)` || ||
 || `(hash val)` || compute a numeric hash for a value ||
+
 
 = IO Streams =
 
@@ -196,10 +203,12 @@ Hash tables use `equal` to compare keys.
 ||Y|| `(time.string t)`|| ||
 || || `(time.fromstring s)`|| ||
 
+
 = System =
 || done? || *signature* || *description* ||
 ||Y|| `(os.getenv var)` || || 
 ||Y|| `(os.setenv var [val])` || || 
+
 
 = Numbers =
 || *signature* || *description* ||
@@ -213,8 +222,17 @@ Hash tables use `equal` to compare keys.
 || `(rand.double)` || ||
 || `(rand.float)` || ||
 
+
 = C values =
 || *signature* || *description* ||
 || `(sizeof x)` || size in bytes of c value or type ||
 || `(typeof x)` || symbolic representation of the type of any value ||
 || `(copy x)` || copy a mutable c value ||
+|| `(plain-old-data? x)` || tells whether x is a plain binary data object (somtimes called a blittable object) ||
+|| `(dump x)` || print a hex dump of a plain-old-data value ||
+
+= Functions =
+|| *signature* || *description* ||
+|| `(function str vals env)` || create a function object from the given bytecode string, vector of referenced values, and closed environment. femtolisp may crash if any of these is malformed. ||
+|| `(compile lambda-expr)` || compile a lambda expression into equivalent bytecode ||
+|| `(disassemble f)` || print an easier-to-read representation of a compiled function ||
