@@ -266,7 +266,7 @@ that returns values from 0 to 9 on successive calls, and the symbol `done`
 thereafter:
 
 {{{
-(let ((ko ()))
+(let ((ko #f))
   (lambda ()
     (with-delimited-continuations
      (if ko (ko 0)
