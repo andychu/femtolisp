@@ -55,7 +55,7 @@
 
 == Lists ==
 
-`map, nconc, append, assoc, assv, assq, member, memv, memq, caar, cadr, cdar, cddr, caaar, caadr, cadar, caddr, cdaar, cdadr, cddar, cdddr, every, any, list?, list-tail, list-ref, list*, nlist*, lastcdr, last, length=, map!, mapcar, for-each, filter, foldr, foldl, reverse, nreverse, copy-list, copy-tree, map-int, iota, revappend, nreconc, delete-duplicates`
+`map, append, append!, assoc, assv, assq, member, memv, memq, caar, cadr, cdar, cddr, caaar, caadr, cadar, caddr, cdaar, cdadr, cddar, cdddr, every, any, list?, list-tail, list-ref, list*, last-pair, lastcdr, length=, length>, map!, mapcar, for-each, filter, count, foldr, foldl, reverse, reverse!, copy-list, copy-tree, map-int, iota, revappend, nreconc, delete-duplicates`
 
 == Predicates ==
 
@@ -102,6 +102,7 @@ The following cvalue constructors are also available: `int8, uint8, int16, uint1
 || `*os-name*` || symbol indicating the platform where we're running ||
 || `*print-pretty*` || enable pretty printing, default is #t ||
 || `*print-width*` || number of columns used in prettyprinting, default 80 ||
+|| `*print-readably*` || print values so they can be read back in, default #t ||
 || `*stdin*, *stdout*, *stderr*` || io streams for standard descriptors ||
 || `*input-stream*, *output-stream*` || current default io streams ||
 || `*directory-separator*` || the directory separator on the local platform ||
@@ -216,7 +217,7 @@ Hash tables use `equal` to compare keys.
 || `(fixnum x)` || convert to fixnum ||
 || `(integer? x)` || is x an exact integer? ||
 || `(integer-valued? x)` || is x integer valued? ||
-|| `(rand)` || ||
+|| `(rand)` || get a random fixnum ||
 || `(rand.uint32)` || ||
 || `(rand.uint64)` || ||
 || `(rand.double)` || ||
@@ -226,7 +227,7 @@ Hash tables use `equal` to compare keys.
 = C values =
 || *signature* || *description* ||
 || `(sizeof x)` || size in bytes of c value or type ||
-|| `(typeof x)` || symbolic representation of the type of any value ||
+|| `(typeof x)` || symbolic representation of the type of any value. returns one of the symbols `pair, fixnum, symbol, vector, boolean, null, builtin,` or `function`, or a cvalue type expression. ||
 || `(copy x)` || copy a mutable c value ||
 || `(plain-old-data? x)` || tells whether x is a plain binary data object (somtimes called a blittable object) ||
 || `(dump x)` || print a hex dump of a plain-old-data value ||
@@ -234,5 +235,8 @@ Hash tables use `equal` to compare keys.
 = Functions =
 || *signature* || *description* ||
 || `(function str vals env)` || create a function object from the given bytecode string, vector of referenced values, and closed environment. femtolisp may crash if any of these is malformed. ||
+|| `(function:code f)` || get the bytecode string for a function ||
+|| `(function:vals f)` || get a function's vector of referenced values ||
+|| `(function:env f)` || get a function's closed environment ||
 || `(compile lambda-expr)` || compile a lambda expression into equivalent bytecode ||
 || `(disassemble f)` || print an easier-to-read representation of a compiled function ||

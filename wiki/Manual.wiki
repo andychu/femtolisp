@@ -365,8 +365,8 @@ symbolic expressions:
   * Primitive types are symbols `int8, uint8, int16, uint16, int32, uint32, int64, uint64, byte, wchar, long, ulong, float, double, void`
   * Arrays `(array TYPE SIZE)`, where TYPE is another C type and SIZE is either a Lisp number or a C ulong. SIZE can be omitted to represent incomplete C array types like `int a[]`. As in C, the size may only be omitted for the top level of a nested array; all array _element_ types must have explicit sizes. Examples:
 
-  * `int a[][2][3]` is `(array (array (array int32 3) 2))`
-  * `int a[4][]` would be `(array (array int32) 4)`, but this is invalid.
+    * `int a[][2][3]` is `(array (array (array int32 3) 2))`
+    * `int a[4][]` would be `(array (array int32) 4)`, but this is invalid.
 
   * Pointer `(pointer TYPE)`
   * Struct `(struct ((NAME TYPE) (NAME TYPE) ...))`
