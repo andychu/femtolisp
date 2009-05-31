@@ -110,30 +110,30 @@ The following cvalue constructors are also available: `int8, uint8, int16, uint1
 
 = Strings =
 
-|| done? || *signature* || *description* ||
-|| Y     || `(string? x)` || ||
-|| Y     || `(string a b ...)` || append/construct ||
-|| Y     || `(string.inc str index [nchars])` || increment a byte index by n characters (default 1) ||
-|| Y     || `(string.dec str index [nchars])` ||  ||
-|| Y     || `(string.count str i j)` || # of chars between 2 byte offsets ||
-||       || `(string.width str)` || # columns when printed ||
-|| Y     || `(string.char str i)` || char at byte offset ||
-|| Y     || `(string.sub str i j)` || substring between 2 bytes offsets ||
-|| Y     || `(string.split str sep-str)` || split string on characters in sep-str string ||
-|| Y     || `(string.trim s at-start at-end)` || remove given chars from beginning and end of string ||
-|| Y     || `(string.reverse s)` || ||
-|| Y     || `(string.find s str|char [start offset])` || ||
-|| Y     || `(string.map f str)` || ||
-|| Y     || `(string.encode wchar-array)` || convert to UTF8 ||
-|| Y     || `(string.decode str)` || convert to UCS ||
-|| Y     || `(string.tail str n)` || drop n characters from the front of str ||
-|| Y     || `(number->string n [radix])` || ||
-|| Y     || `(string.lpad str n c)` || pad string to length n by adding character c on the left. ||
-|| Y     || `(string.rpad str n c)` || pad string to length n by adding character c on the right. ||
-|| Y     || `(string.rep s k)` || build a string of k copies of s ||
-|| Y     || `(string.join strlist sep)` || join strings from a list, with the given separator between them ||
-|| Y     || `(char.upcase c)` || ||
-|| Y     || `(char.downcase c)` || ||
+|| *signature* || *description* ||
+|| `(string? x)` || ||
+|| `(string a b ...)` || append/construct ||
+|| `(string.inc str index [nchars])` || increment a byte index by n characters (default 1) ||
+|| `(string.dec str index [nchars])` ||  ||
+|| `(string.count str i j)` || # of chars between 2 byte offsets ||
+|| `(string.width str)` || # columns when printed ||
+|| `(string.char str i)` || char at byte offset ||
+|| `(string.sub str i j)` || substring between 2 bytes offsets ||
+|| `(string.split str sep-str)` || split string on characters in sep-str string ||
+|| `(string.trim s at-start at-end)` || remove given chars from beginning and end of string ||
+|| `(string.reverse s)` || ||
+|| `(string.find s str|char [start offset])` || ||
+|| `(string.map f str)` || ||
+|| `(string.encode wchar-array)` || convert to UTF8 ||
+|| `(string.decode str)` || convert to UCS ||
+|| `(string.tail str n)` || drop n characters from the front of str ||
+|| `(number->string n [radix])` || ||
+|| `(string.lpad str n c)` || pad string to length n by adding character c on the left. ||
+|| `(string.rpad str n c)` || pad string to length n by adding character c on the right. ||
+|| `(string.rep s k)` || build a string of k copies of s ||
+|| `(string.join strlist sep)` || join strings from a list, with the given separator between them ||
+|| `(char.upcase c)` || ||
+|| `(char.downcase c)` || ||
 
 
 = Hash Tables =
