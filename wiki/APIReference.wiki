@@ -230,7 +230,7 @@ Hash tables use `equal` to compare keys.
 || `(typeof x)` || symbolic representation of the type of any value. returns one of the symbols `pair, fixnum, symbol, vector, boolean, null, builtin,` or `function`, or a cvalue type expression. ||
 || `(copy x)` || copy a mutable c value ||
 || `(plain-old-data? x)` || tells whether x is a plain binary data object (somtimes called a blittable object) ||
-|| `(dump x)` || print a hex dump of a plain-old-data value ||
+|| `(dump x [offset [nbytes]])` || print a hex dump of a plain-old-data value ||
 
 = Functions =
 || *signature* || *description* ||
