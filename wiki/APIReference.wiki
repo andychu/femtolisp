@@ -83,7 +83,7 @@ The following cvalue constructors are also available: `int8, uint8, int16, uint1
 
 = Environment =
 || *signature* || *description* ||
-|| `(intern str)` || intern a string (creates a symbol) ||
+|| `(symbol str)` || create an interned symbol with the given name ||
 || `(gensym)` || create a unique symbol ||
 || `(symbol-syntax sym)` || get the expander for a symbol, or nil if none ||
 || `(set-syntax! sym function)` || set the macro expander function for the given head symbol ||
